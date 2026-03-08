@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Convert your 2×2 flashcard PDFs into Anki decks instantly. 100% free, runs in your browser, no upload required.">
+    <title>PDF to Anki — Free Flashcard Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Libraries loaded from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+    <div class="page-wrap">
+
+        <!-- ── Header ── -->
+        <header>
+            <div class="brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                <h1>PDF<span class="accent">→</span>Anki</h1>
+            </div>
+            <p class="tagline">Turn your hand-drawn flashcard PDFs into Anki decks.<br>
+                Runs entirely in your browser — nothing is ever uploaded.</p>
+        </header>
+
+        <!-- ── Main card ── -->
+        <main>
+            <div class="card">
+
+                <!-- Drop zone (shown when no file selected) -->
+                <div id="drop-zone" class="drop-zone">
+                    <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polyline points="16 16 12 12 8 16" />
+                        <line x1="12" y1="12" x2="12" y2="21" />
+                        <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                    </svg>
+                    <p class="drop-title">Drag & drop your PDF here</p>
+                    <p class="drop-sub">or <label for="file-input" class="file-label">browse from your device</label>
+                    </p>
+                    <input id="file-input" type="file" accept=".pdf" hidden>
+                </div>
+
+                <!-- File info row (shown after file selected) -->
+                <div id="file-row" class="file-row hidden">
+                    <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <div class="file-meta">
+                        <span id="file-name">document.pdf</span>
+                        <span id="file-size" class="muted">0 KB</span>
+                    </div>
+                    <button id="clear-btn" class="icon-btn" aria-label="Remove file">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Options -->
+                <div class="options">
+                    <div class="field">
+                        <label for="deck-name">Deck Name</label>
+                        <input id="deck-name" type="text" placeholder="Leave blank to use filename">
+                    </div>
+                    <div class="field">
+                        <label for="dpi-select">Quality</label>
+                        <select id="dpi-select">
+                            <option value="150">Fast (150 DPI)</option>
+                            <option value="200" selected>Standard (200 DPI)</option>
+                            <option value="300">High (300 DPI)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Progress bar (hidden until converting) -->
+                <div id="progress-wrap" class="progress-wrap hidden">
+                    <div id="progress-bar" class="progress-bar" style="width:0%"></div>
+                </div>
+                <p id="progress-label" class="progress-label hidden">Processing page 0 of 0…</p>
+
+                <!-- Convert button -->
+                <button id="convert-btn" class="primary-btn" disabled>
+                    <span id="btn-label">Convert to Anki Deck</span>
+                    <svg id="btn-spinner" class="spinner hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path
+                            d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                    </svg>
+                </button>
+
+                <div id="status-msg" class="status-msg hidden"></div>
+            </div>
+
+            <!-- How it works -->
+            <section class="how">
+                <h2>How it works</h2>
+                <ol class="steps">
+                    <li>
+                        <span class="step-num">1</span>
+                        <div>
+                            <strong>Draw on the template</strong>
+                            <p>Use the <a href="template.pdf" download>flashcard template PDF</a> in Samsung Notes,
+                                GoodNotes, or any PDF annotation app. Top boxes = front, bottom boxes = back.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="step-num">2</span>
+                        <div>
+                            <strong>Export as PDF</strong>
+                            <p>Save your annotated file as a PDF back to your device.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="step-num">3</span>
+                        <div>
+                            <strong>Convert & import</strong>
+                            <p>Upload it here, hit Convert, and open the downloaded <code>.apkg</code> in Anki or
+                                AnkiDroid.</p>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+        </main>
+
+        <!-- ── Footer ── -->
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com" class="footer-link">GitHub</a>
+                <span class="dot">·</span>
+                <a href="https://buymeacoffee.com" class="footer-link coffee-link">☕ Buy me a coffee</a>
+            </div>
+            <p class="footer-note">Open source · No data collected · Works offline</p>
+
+            <!-- AdSense placeholder — replace with real tag once approved -->
+            <div class="ad-slot" aria-hidden="true">
+                <!-- Google AdSense ad unit will go here -->
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

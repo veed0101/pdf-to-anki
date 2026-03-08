@@ -1,0 +1,480 @@
+:root {
+    --bg: #000000;
+    --surface: #0f0f0f;
+    --border: #222222;
+    --border-hi: #3a3a3a;
+    --text: #f0f0f0;
+    --muted: #888888;
+    --accent: #6366f1;
+    --accent-hi: #818cf8;
+    --danger: #ef4444;
+    --success: #10b981;
+    --radius: 14px;
+    --ease: 0.18s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1.25rem 4rem;
+    -webkit-font-smoothing: antialiased;
+}
+
+.page-wrap {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ── Header ── */
+header {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.brand-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+h1 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.accent {
+    color: var(--accent);
+}
+
+.tagline {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* ── Card ── */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* ── Drop zone ── */
+.drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: calc(var(--radius) - 4px);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: border-color var(--ease), background var(--ease);
+    position: relative;
+}
+
+.drop-zone.drag-over,
+.drop-zone:hover {
+    border-color: var(--accent);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.drop-icon {
+    width: 44px;
+    height: 44px;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+    transition: color var(--ease), transform var(--ease);
+}
+
+.drop-zone:hover .drop-icon {
+    color: var(--accent);
+    transform: translateY(-4px);
+}
+
+.drop-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.drop-sub {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.file-label {
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ── File row ── */
+.file-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 4px);
+}
+
+.file-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.file-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#file-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 0.1rem;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color var(--ease), background var(--ease);
+    flex-shrink: 0;
+}
+
+.icon-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.icon-btn:hover {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── Options ── */
+.options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+input[type="text"],
+select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2.5px rgba(99, 102, 241, 0.2);
+}
+
+select {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* ── Progress ── */
+.progress-wrap {
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+}
+
+.progress-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+/* ── Primary button ── */
+.primary-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.4);
+    transition: background var(--ease), transform var(--ease), box-shadow var(--ease);
+}
+
+.primary-btn:hover:not(:disabled) {
+    background: var(--accent-hi);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+}
+
+.primary-btn:active:not(:disabled) {
+    transform: none;
+}
+
+.primary-btn:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ── Spinner ── */
+.spinner {
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Status message ── */
+.status-msg {
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+}
+
+.status-msg.error {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-msg.success {
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* ── How it works ── */
+.how {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+}
+
+.how h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.1rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.steps li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.step-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.steps li div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.steps strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.steps p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.steps a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+code {
+    background: rgba(255, 255, 255, 0.07);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+}
+
+.footer-link {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color var(--ease);
+}
+
+.footer-link:hover {
+    color: var(--text);
+}
+
+.coffee-link:hover {
+    color: #f59e0b;
+}
+
+.dot {
+    color: var(--border-hi);
+}
+
+.footer-note {
+    font-size: 0.75rem;
+    color: var(--border-hi);
+}
+
+/* AdSense slot — will show nothing until you paste your tag in */
+.ad-slot {
+    min-height: 0;
+}
+
+/* ── Utilities ── */
+.hidden {
+    display: none !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 420px) {
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 1.25rem;
+    }
+}
