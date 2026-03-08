@@ -363,8 +363,9 @@ convertBtn.addEventListener('click', async () => {
 
         setProgress(100, 'Done!');
 
-        // Trigger download
-        const url = URL.createObjectURL(blob);
+        // Re-wrap blob so mobile browsers don't rename .apkg → .zip
+        const apkgBlob = new Blob([blob], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(apkgBlob);
         const a = document.createElement('a');
         a.href = url; a.download = `${deckName}.apkg`;
         document.body.appendChild(a);
