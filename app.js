@@ -363,17 +363,33 @@ convertBtn.addEventListener('click', async () => {
 
         setProgress(100, 'Done!');
 
-        // Re-wrap blob so mobile browsers don't rename .apkg → .zip
-        const apkgBlob = new Blob([blob], { type: 'application/octet-stream' });
-        const url = URL.createObjectURL(apkgBlob);
+        // Build a proper File object with the .apkg name baked in
+        const fileName = `${deckName}.apkg`;
+        const apkgFile = new File([blob], fileName, { type: 'application/octet-stream' });
+
+        // On mobile: use Web Share API to send directly to AnkiDroid
+        if (navigator.canShare && navigator.canShare({ files: [apkgFile] })) {
+            try {
+                await navigator.share({ files: [apkgFile], title: fileName });
+                showStatus(`✓ Shared "${fileName}" — ${allCards.length} cards!`, 'success');
+                return; // skip the fallback download
+            } catch (shareErr) {
+                if (shareErr.name === 'AbortError') {
+                    showStatus('Share cancelled.', 'error');
+                    return;
+                }
+                // Share failed for another reason — fall through to download
+            }
+        }
+
+        // Fallback: trigger a regular download (works on desktop)
+        const url = URL.createObjectURL(apkgFile);
         const a = document.createElement('a');
-        a.href = url; a.download = `${deckName}.apkg`;
+        a.href = url; a.download = fileName;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-
-        showStatus(`✓ Downloaded "${deckName}.apkg" — ${allCards.length} cards created!`, 'success');
 
     } catch (err) {
         console.error(err);
