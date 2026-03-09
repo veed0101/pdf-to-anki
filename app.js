@@ -22,7 +22,7 @@ const MARGIN = 25;
 const GAP = 18;
 const ROWS = 2;
 const COLS = 2;
-const BORDER_INSET = 4; // px inside box border to exclude the rounded outline
+const BORDER_INSET = 10; // px inside box border to fully clear the rounded corners
 
 const BOX_W = (PAGE_W - 2 * MARGIN - (COLS - 1) * GAP) / COLS;
 const BOX_H = (PAGE_H - 2 * MARGIN - (ROWS - 1) * GAP) / ROWS;
