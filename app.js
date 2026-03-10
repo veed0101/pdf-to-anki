@@ -92,22 +92,24 @@ function cropToBlob(src, x, y, w, h) {
     return new Promise(res => dst.toBlob(res, 'image/png'));
 }
 
-/** Extract the 4 card images from a rendered page canvas */
+/** Extract card images from a rendered page canvas.
+ *  Each row is one card: left box = front, right box = back. */
 async function extractCards(canvas, scale) {
     const cards = [];
-    for (let col = 0; col < COLS; col++) {
-        const pairs = [];
-        for (let row = 0; row < ROWS; row++) {
-            const px = Math.round((OFFSET_X + col * (BOX_W + GAP)) * scale) + BORDER_INSET;
-            const py = Math.round((OFFSET_Y + row * (BOX_H + GAP)) * scale) + BORDER_INSET;
-            const pw = Math.round(BOX_W * scale) - 2 * BORDER_INSET;
-            const ph = Math.round(BOX_H * scale) - 2 * BORDER_INSET;
-            pairs.push(await cropToBlob(canvas, px, py, pw, ph));
-        }
-        // pairs[0] = front (top row), pairs[1] = back (bottom row)
-        cards.push({ front: pairs[0], back: pairs[1] });
+    for (let row = 0; row < ROWS; row++) {
+        const frontBlob = await cropBox(canvas, row, 0, scale); // left = front
+        const backBlob = await cropBox(canvas, row, 1, scale); // right = back
+        cards.push({ front: frontBlob, back: backBlob });
     }
     return cards; // 2 cards per page
+}
+
+function cropBox(canvas, row, col, scale) {
+    const px = Math.round((OFFSET_X + col * (BOX_W + GAP)) * scale) + BORDER_INSET;
+    const py = Math.round((OFFSET_Y + row * (BOX_H + GAP)) * scale) + BORDER_INSET;
+    const pw = Math.round(BOX_W * scale) - 2 * BORDER_INSET;
+    const ph = Math.round(BOX_H * scale) - 2 * BORDER_INSET;
+    return cropToBlob(canvas, px, py, pw, ph);
 }
 
 // ─── Anki database ─────────────────────────────────────────────────────────────
